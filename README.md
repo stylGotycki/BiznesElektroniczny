@@ -5,30 +5,32 @@ Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.
 
 -------------------------------------------------------------------------------------
 
-## struktura
+## Struktura
 
-BiznesElektroniczny/
-├── docker-compose.yml      # konfiguracja dockera
-├── .gitignore
-├── prestashop/         # pliki prestashop
-└── README.md
+BiznesElektroniczny/     
+├── docker-compose.yml     # konfiguracja dockera   
+├── .gitignore     
+├── prestashop/            # pliki prestashop     
+└── README.md     
 
 
 --------------------------------------------------------------------------------------
 
-## uruchomienie
+## Uruchomienie
 
 ### 1. Wymagania
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ### 2. Uruchom kontenery
+```bash
 docker compose up
+```
 
 ### 3. Odpalanie strony
-klient : http://localhost:8080
-admin : http://localhost:8080/admin989ra7n38
-login : mruktamara64@gmail.com
-pass : klameczkapl321
+klient : http://localhost:8080     
+admin : http://localhost:8080/admin989ra7n38     
+login : mruktamara64@gmail.com     
+pass : klameczkapl321     
 
 ### 4. Problemy
 generalnie dziala to bardzo powolnie i ciezko, wydaje mi sie ze to kwestia docker <-> windows moment, narazie nie wiem co z tym zrobic
