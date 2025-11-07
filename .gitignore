@@ -1,0 +1,33 @@
+# --- PrestaShop Temporary and Generated Files ---
+/var/
+/upload/
+/download/
+
+# --- Generated Image Cache/Temporary Folders ---
+/img/tmp/
+
+# --- Image Cache (ignore contents, but keep placeholder files) ---
+/img/p/*
+
+# --- Node / PHP Dependencies ---
+/vendor/
+/node_modules/
+
+# --- Sensitive Config Files ---
+config/settings.inc.php
+
+# --- Logs and Artifacts ---
+*.log
+*.zip
+*.tar.gz
+*.bak
+*.tmp
+*.swp
+.env
+
+# --- System / OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Docker/Local Dev Data ---
+/db_data/
