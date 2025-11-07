@@ -1,0 +1,10 @@
+/prestashop/admin/autoupgrade/
+/prestashop/cache/
+/prestashop/img/tmp/
+/prestashop/logs/
+/prestashop/download/
+/prestashop/mails/
+/prestashop/modules/
+/prestashop/themes/
+*.log
+*.tmp
