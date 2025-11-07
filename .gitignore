@@ -1,0 +1,28 @@
+# Docker volumes and local data
+/db_data/
+var/cache/
+var/logs/
+
+# Node / vendor dependencies
+/vendor/
+/node_modules/
+
+# Uploads and downloads
+/upload/
+/download/
+
+# PrestaShop config
+/config/settings.inc.php
+
+# Logs and temp files
+*.log
+*.zip
+*.tar.gz
+*.bak
+*.tmp
+*.swp
+.env
+
+# System / OS files
+.DS_Store
+Thumbs.db
