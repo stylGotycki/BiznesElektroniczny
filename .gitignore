@@ -6,6 +6,7 @@ var/logs/
 # Node / vendor dependencies
 /vendor/
 /node_modules/
+composer.lock
 
 # Uploads and downloads
 /upload/
@@ -13,6 +14,11 @@ var/logs/
 
 # PrestaShop config
 /config/settings.inc.php
+/var/
+/cache/
+/logs/
+/upload/
+/download/
 
 # Logs and temp files
 *.log
