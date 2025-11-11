@@ -8,11 +8,11 @@ Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.
 ## Struktura
 
 BiznesElektroniczny/     
-├── docker-compose.yml     # konfiguracja dockera   
-├── .gitignore     
-├── prestashop/            # pliki prestashop
-├── prestashop_dump.sql    # sql dump
-└── README.md
+├── docker-compose.yml     # konfiguracja dockera            
+├── .gitignore                    
+├── prestashop/            # pliki prestashop              
+├── prestashop_dump.sql    # sql dump                
+└── README.md          
 
 
 --------------------------------------------------------------------------------------
