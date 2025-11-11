@@ -17,7 +17,7 @@
 #prestashop/config/settings.inc.php
 
 # --- Logs and Artifacts ---
-*.log
+#*.log
 *.zip
 *.tar.gz
 *.bak
