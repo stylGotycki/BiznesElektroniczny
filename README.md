@@ -10,8 +10,9 @@ Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.
 BiznesElektroniczny/     
 ├── docker-compose.yml     # konfiguracja dockera   
 ├── .gitignore     
-├── prestashop/            # pliki prestashop     
-└── README.md     
+├── prestashop/            # pliki prestashop
+├── prestashop_dump.sql    # sql dump
+└── README.md
 
 
 --------------------------------------------------------------------------------------
