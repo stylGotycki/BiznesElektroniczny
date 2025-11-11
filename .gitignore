@@ -11,7 +11,7 @@
 
 # --- Node / PHP Dependencies ---
 #prestashop/vendor/
-#/node_modules/
+/node_modules/
 
 # --- Sensitive Config Files ---
 #prestashop/config/settings.inc.php
@@ -27,7 +27,7 @@
 
 # --- System / OS Files ---
 .DS_Store
-#Thumbs.db
+Thumbs.db
 
 # --- Docker/Local Dev Data ---
-#/db_data/
+/db_data/
