@@ -28,6 +28,3 @@
 # --- System / OS Files ---
 .DS_Store
 Thumbs.db
-
-# --- Docker/Local Dev Data ---
-/db_data/
