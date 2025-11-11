@@ -1,20 +1,20 @@
 # --- PrestaShop Temporary and Generated Files ---
-prestashop/var/
-prestashop/upload/
-prestashop/download/
+#prestashop/var/
+#prestashop/upload/
+#prestashop/download/
 
 # --- Generated Image Cache/Temporary Folders ---
-prestashop/img/tmp/
+#prestashop/img/tmp/
 
 # --- Image Cache (ignore contents, but keep placeholder files) ---
-prestashop/img/p/*
+#prestashop/img/p/*
 
 # --- Node / PHP Dependencies ---
-prestashop/vendor/
+#prestashop/vendor/
 /node_modules/
 
 # --- Sensitive Config Files ---
-prestashop/config/settings.inc.php
+#prestashop/config/settings.inc.php
 
 # --- Logs and Artifacts ---
 *.log
