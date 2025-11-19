@@ -25,8 +25,8 @@ BiznesElektroniczny/
 
 ### 2. Uprawnienia
 ```
-chown -R www-data:www-data /var/www/html/var/cache/
-chmod -R 755 /var/www/html/var/cache/
+chown -R www-data:www-data /var/www/html/
+chmod -R 755 /var/www/html/
 ```
 
 
