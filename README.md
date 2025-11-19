@@ -23,15 +23,19 @@ BiznesElektroniczny/
 - docker
 - docker compose
 
-### 2. Wgranie bazy
+### 2. Uprawnienia
+```
+chown -R www-data:www-data /var/www/html/
+chmod -R 755 /var/www/html/
+```
 
 
-### 2. Uruchomienie kontenerow
+### 3. Uruchomienie kontenerow
 ```
 docker compose up
 ```
 
-### 3. Odpalanie strony
+### 4. Odpalanie strony
 klient : http://localhost:8080     
 admin : http://localhost:8080/adminxxxx  
 login : mruktamara64@gmail.com     
