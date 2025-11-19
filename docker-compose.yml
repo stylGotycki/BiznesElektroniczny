@@ -23,7 +23,7 @@ services:
       DB_USER: prestashop
       DB_PASSWORD: prestashop
     volumes:
-      - ./prestashop:/var/www/html
+      - ./prestashop:/var/www/html:cached
 
 volumes:
   db_data:
