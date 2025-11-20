@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: prestashop
     volumes:
       - db_data:/var/lib/mysql
+      - ./prestashop_dump.sql:/docker-entrypoint-initdb.d/prestashop_dump.sql
 
   prestashop:
     image: prestashop/prestashop:1.7.8
