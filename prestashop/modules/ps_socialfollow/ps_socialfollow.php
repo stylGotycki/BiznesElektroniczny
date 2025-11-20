@@ -17,7 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-if (!defined('_CAN_LOAD_FILES_')) {
+if (!defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -47,7 +47,7 @@ class Ps_Socialfollow extends Module implements WidgetInterface
         $this->name = 'ps_socialfollow';
         $this->tab = 'advertising_marketing';
         $this->author = 'PrestaShop';
-        $this->version = '2.3.0';
+        $this->version = '2.3.3';
 
         $this->bootstrap = true;
         parent::__construct();
@@ -384,13 +384,16 @@ class Ps_Socialfollow extends Module implements WidgetInterface
      */
     protected function updateFields()
     {
+        $defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $validator = Validation::createValidator();
         $constraints = [new Url()];
         $values = [];
         $errors = [];
         foreach (static::SOCIAL_NETWORKS as $social) {
+            $defaultValue = trim(Tools::getValue("BLOCKSOCIAL_{$social}_{$defaultLanguageId}", ''));
             foreach (Language::getIDs() as $id_lang) {
-                $values[$social][$id_lang] = trim(Tools::getValue("BLOCKSOCIAL_{$social}_{$id_lang}", ''));
+                $value = trim(Tools::getValue("BLOCKSOCIAL_{$social}_{$id_lang}", ''));
+                $values[$social][$id_lang] = $value ? $value : $defaultValue;
                 $violations = $validator->validate($values[$social][$id_lang], $constraints);
 
                 if (count($violations)) {

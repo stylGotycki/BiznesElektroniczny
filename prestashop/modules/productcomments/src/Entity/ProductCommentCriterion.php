@@ -26,8 +26,8 @@
 
 namespace PrestaShop\Module\ProductComment\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Language;
 use Validate;
 
 /**
@@ -65,52 +65,68 @@ class ProductCommentCriterion
     private $active = false;
 
     /**
-     * @var array
-     *
-     * Need to be implemented as ORM\OneToMany in the future
+     * @ORM\OneToMany(targetEntity="PrestaShop\Module\ProductComment\Entity\ProductCommentCriterionLang", cascade={"persist", "remove"}, mappedBy="productcommentcriterion")
      */
-    private $names;
+    private $criterionLangs;
 
     /**
      * @var array
      *
-     * Need to be implemented as ORM\OneToMany in the future
+     * @todo implement as ORM\OneToMany in the future
      */
     private $categories;
 
     /**
      * @var array
      *
-     * Need to be implemented as ORM\OneToMany in the future
+     * @todo implement as ORM\OneToMany in the future
      */
     private $products;
 
     public function __construct()
     {
-        $langIsoIds = Language::getIsoIds();
-        foreach ($langIsoIds as $langIsoId) {
-            $this->names[$langIsoId['id_lang']] = $langIsoId['iso_code'];
+        $this->criterionLangs = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCriterionLangs()
+    {
+        return $this->criterionLangs;
+    }
+
+    /**
+     * @return ProductCommentCriterionLang|null
+     */
+    public function getCriterionLangByLangId(int $langId)
+    {
+        foreach ($this->criterionLangs as $criterionLang) {
+            if ($langId === $criterionLang->getLang()->getId()) {
+                return $criterionLang;
+            }
         }
+
+        return null;
     }
 
-    /**
-     * @return array
-     */
-    public function getNames()
+    public function addCriterionLang(ProductCommentCriterionLang $criterionLang): self
     {
-        return $this->names;
-    }
-
-    /**
-     * @param array $langNames
-     *
-     * @return ProductCommentCriterion
-     */
-    public function setNames($langNames)
-    {
-        $this->names = $langNames;
+        $criterionLang->setProductCommentCriterion($this);
+        $this->criterionLangs->add($criterionLang);
 
         return $this;
+    }
+
+    public function getCriterionName(): string
+    {
+        if ($this->criterionLangs->count() <= 0) {
+            return '';
+        }
+
+        $criterionLang = $this->criterionLangs->first();
+
+        return $criterionLang->getName();
     }
 
     /**
@@ -123,10 +139,8 @@ class ProductCommentCriterion
 
     /**
      * @param array $selectedCategories
-     *
-     * @return ProductCommentCriterion
      */
-    public function setCategories($selectedCategories)
+    public function setCategories($selectedCategories): self
     {
         $this->categories = $selectedCategories;
 
@@ -143,71 +157,47 @@ class ProductCommentCriterion
 
     /**
      * @param array $selectedProducts
-     *
-     * @return ProductCommentCriterion
      */
-    public function setProducts($selectedProducts)
+    public function setProducts($selectedProducts): self
     {
         $this->products = $selectedProducts;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param int $type
-     *
-     * @return ProductCommentCriterion
-     */
-    public function setType($type)
+    public function setType(int $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * @param bool $active
-     *
-     * @return ProductCommentCriterion
-     */
-    public function setActive($active)
+    public function setActive(bool $active): self
     {
         $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isValid()
+    public function isValid(): bool
     {
-        foreach ($this->names as $value) {
-            if (!Validate::isGenericName($value)) {
+        foreach ($this->criterionLangs as $criterionLang) {
+            if (!Validate::isGenericName($criterionLang->getName())) {
                 return false;
             }
         }
