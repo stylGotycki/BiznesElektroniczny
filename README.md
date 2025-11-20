@@ -1,7 +1,12 @@
 # Biznes Elektroniczny — Projekt PrestaShop - Studio Klameczek
 
 Ten projekt uruchamia platformę **PrestaShop** przy użyciu **Docker Compose**.  
-Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.
+Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.             
+Członkowie grupy :   
+Tamara Mruk 197584              
+Filip Domaszk    
+Konrad Pawłowski     
+Filip Mikulski       
 
 -------------------------------------------------------------------------------------
 
