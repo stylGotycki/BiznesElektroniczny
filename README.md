@@ -1,6 +1,7 @@
 # Biznes Elektroniczny — Projekt PrestaShop - Studio Klameczek
 
-Ten projekt uruchamia platformę **PrestaShop** przy użyciu **Docker Compose**.  
+Ten projekt uruchamia sklep **PrestaShop** przy użyciu **Docker Compose**.     
+Jest to sklep z różnymi akcesoriami, głownie do drzwi, np. klamki, stopery.
 Zawiera kontener z PrestaShop oraz kontener z bazą danych **MariaDB**.             
 Członkowie grupy :   
 Tamara Mruk 197584              
@@ -62,6 +63,3 @@ docker stop <container_name_or_id>
 ```
 docker exec -it <container_name_or_id> ls /var/www/html/
 ```
-
-## Stuff
-readme do poprawy
