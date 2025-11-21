@@ -10,10 +10,10 @@ Prosty scrapper, który ściąga dane produktów, włącznie ze zdjęciami.
     - [ ] with subcategories
 
 - [ ] download products data
-    - [ ] single product
+    - [x] single product
     - [ ] assigning category 
     - [ ] pagination
-    - [ ] images in png
+    - [x] images in png
 
 - [ ] post scrapped data to prestashop
     

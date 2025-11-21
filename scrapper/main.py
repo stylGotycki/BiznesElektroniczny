@@ -26,9 +26,11 @@ class ProductView:
         self.name = name
         self.link = link
         self.images = []
+#        self.product_cover = None
         self.price = price
         self.manufacturer = manufacturer
         self.description = None
+    
         
     def to_dict(self) -> dict:
         """
@@ -46,7 +48,8 @@ class ProductView:
             "description": self.description
         }
     
-    def scrape_product_details(self, images_dir: str):
+    
+    def scrape_product_details(self, images_dir: str) -> None:
         """
         Scrapping informacji o produkcie. Następnie aktualizacja obiektu i zapis zdjęć we wskazanym katalogu.
 
@@ -58,17 +61,54 @@ class ProductView:
         response = requests.get(full_url)
         soup = BeautifulSoup(response.text, 'html.parser')
         
+        # self._find_and_set_description(soup)
+        self._find_and_set_images(soup, images_dir)
+    
+        
+    def _find_and_set_description(self, soup: BeautifulSoup) -> None:
+        """
+        Wyłuskanie opisu produktu.
+        
+        Args:
+            soup (BeautifulSoup): Kontekst pliku HTML.
+        """
+        
         description_element = soup.find('div', class_='product-description', itemprop='description')
         if description_element:
             paragraphs = description_element.find_all('p')
             self.description = [p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)]
         else:
             self.description = ["Brak opisu"]
-                
-        # print(description_element)
-        # print(self.description)
-
     
+     
+    # TODO: czy pobierać wszystkie zdjęcia?
+    # TODO: large i medium to często to samo - chyba trzeba wywalić jeden z nich
+    def _find_and_set_images(self, soup: BeautifulSoup, images_dir: str) -> None:
+        """
+        Wyłuskanie obrazów produktu. 
+
+        Args:
+            soup (BeautifulSoup): Kontekst pliku HTML.
+            images_dir (str): Nazwa katalogu, w którym będą zapisane zdjęcia produktu.
+        """
+        
+        gallery_element = soup.find('ul', class_='product-images js-qv-product-images')
+        gallery_items = gallery_element.find_all('img')
+        
+        for idx, item in enumerate(gallery_items):
+            images = {
+                'large': item['data-image-large-src'],    
+                'medium': item['data-image-medium-src'],
+                'default': item['src']
+            }
+            
+            for image_size, image_url in images.items():
+                formatted_name = f"{image_size}_{sanitize_filename(self.name)}_{idx}.jpg"
+                self.images.append(formatted_name)
+                save_image(image_url, images_dir, formatted_name)
+                
+            
+
 def get_html_with_requests(url: str):
     """
     Pobierz HTML ze strony za pomocą requests.
@@ -80,6 +120,29 @@ def get_html_with_requests(url: str):
     response = requests.get(url)
     response.raise_for_status()
     return response.text
+
+
+def sanitize_filename(filename):
+    """Usuwa niedozwolone znaki w nazwach plików."""
+    
+    return re.sub(r'[\\/*?:"<>|]', '_', filename)
+
+
+def save_image(image_url, output_dir, filename):
+    """Pobiera obrazek z URL i zapisuje go w podanym katalogu."""
+    
+    output_path = os.path.join(output_dir, filename)
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        response = requests.get(image_url, stream=True)
+        response.raise_for_status()  # Wyrzuca wyjątek w razie błędu HTTP
+        with open(output_path, 'wb') as img_file:
+            for chunk in response.iter_content(chunk_size=8192):
+                img_file.write(chunk)
+    except Exception as e:
+        print(f"Błąd podczas pobierania obrazka {image_url}: {e}")
 
 
 class Category:
@@ -96,7 +159,7 @@ def main():
         manufacturer = 'for now empty'
     )
     
-    product.scrape_product_details('for now empty')
+    product.scrape_product_details('../scrapper_results/images')
 
 
 if __name__ == "__main__":
