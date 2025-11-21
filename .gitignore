@@ -17,3 +17,5 @@ Thumbs.db
 
 *.log
 *.tmp
+
+/scrapper_results
