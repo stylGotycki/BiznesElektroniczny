@@ -209,4 +209,79 @@ div.col-md-6.links > .row {
 }
 
 
+/* CHANGES */
+
+#wrapper {
+  padding-top: 0 !important;
+}
+
+div.container {
+  padding: 0 15px !important;
+}
+
+#content-wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.banner {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+}
+
+#search_widget {
+  width: auto !important; 
+  margin-left: auto !important;
+  max-width: 250px !important;
+  margin: 0;
+  padding: 0;
+  float: right !important;
+}
+
+/* 2. Target the text input field inside the form */
+#search_widget form input[type="text"] {
+  /* Set a specific, reduced width for the input box */
+  width: 150px; /* Adjust this value to control the width of the input area */
+  
+  /* Reduce internal spacing (padding) */
+  padding: 5px 10px; 
+  padding-left: 30px !important;
+  
+  /* Reduce font size if needed to fit more text in the reduced width */
+  font-size: 14px; 
+}
+
+/* 3. Target the search button/icon */
+#search_widget form button[type="submit"],
+#search_widget .material-icons.search {
+  /* Ensure the icon/button is snug against the input field */
+  margin: 0;
+  padding: 5px; /* Adjust to match the input's vertical padding */
+}
+
+.header-top-right.col-md-10 {
+  display: flex !important;           /* Enable Flexbox layout */
+  align-items: center;                /* Vertically center the menu and search bar */
+  justify-content: flex-end;          /* Push the elements to the right side */
+  flex-wrap: nowrap !important;       /* CRITICAL: Prevents menu items from wrapping */
+  padding: 0;                         /* Remove default column padding if necessary */
+}
+
+/* 2. Target the menu block specifically (assuming it's a direct child of the col-md-10) */
+#_desktop_top_menu {
+  /* Allow the menu to take up the space it needs */
+  flex-grow: 1;
+  /* Push all items to the left to make space for the search icon on the right */
+  justify-content: flex-start;
+}
+
+/* 3. Target the search widget (ensure it's compact) */
+#search_widget {
+  flex-shrink: 0; /* Prevent the search bar from shrinking */
+  margin-left: auto; /* Pushes the search bar to the far right within the flex container */
+}
+
+
+
 
