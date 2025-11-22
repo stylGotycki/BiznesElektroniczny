@@ -327,7 +327,10 @@ def save_categories_to_json(categories: list[Category]):
         json.dump([c.to_dict() for c in categories], f, indent=4, ensure_ascii=False)
     
 
-
+# FIXME: random errors with converting price to float
+# FIXME: random errors with NoneType (probably broken links)
+# TODO: 404 checking - that would solve some problems
+# TODO: refactor :D
 def main():    
     url = "https://iklamki.pl/pl/"
     html = get_html_with_requests(url)
