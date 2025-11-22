@@ -41,11 +41,9 @@ def get_or_create_category(name):
         print(r.text)
         raise Exception("Cannot read categories")   
 
-    # XML parsing
     root = ET.fromstring(r.text)
     existing_ids = [int(node.attrib["id"]) for node in root.findall(".//category")]
 
-    # check each category details
     for cid in existing_ids:
         rc = requests.get(f"{API_URL}/categories/{cid}", auth=(API_KEY, ""))
         if rc.status_code == 200:
@@ -56,7 +54,7 @@ def get_or_create_category(name):
                 save_category_cache(cache)
                 return cid
 
-    # --- if not found, create new one ---
+
     link_rewrite = slugify(name)
 
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -96,20 +94,14 @@ def upload_categories():
     
     for cat in categories:
         cat_id = get_or_create_category(cat['name'])
+        print(f"Category: {cat['name']} -> ID {cat_id}")
         
-        if cat['subcategories'] is not None:
+        if cat['subcategories'] is not None:    
             for subcat in cat['subcategories']:
                 cat_id2 = get_or_create_category(subcat['name'])
+            
+                print(f"Category: {subcat['name']} -> ID {cat_id2}")
 
-
-
-def upload_manufacturers():
-    pass
-
-
-def upload_products():
-    pass
-
-
-
+# it works!
 upload_categories()
+
