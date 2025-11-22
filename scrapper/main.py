@@ -6,6 +6,10 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+IMAGES_DIR = '../scrapper_results/images'
+PRODUCTS_JSON = '../scrapper_results/json/products.json'
+CATEGORIES_JSON = '../scrapper_results/json/categories.json'
+
 
 class Category:
     """
@@ -93,12 +97,15 @@ class Product:
         }
     
     
-    def scrape(self, images_dir: str) -> None:
+    def scrape(self, images_dir: str) -> bool:
         """
         Scrapping informacji o produkcie. Następnie aktualizacja obiektu i zapis zdjęć we wskazanym katalogu.
 
         Args:
             images_dir (str): Nazwa katalogu, w którym będą zapisane zdjęcia produktu.
+        
+        Returns:
+            bool: Sukces lub porażka
         """
         
         response = requests.get(self.link)
@@ -121,7 +128,7 @@ class Product:
         price = soup.find('span', attrs={'itemprop': 'price'})
         brand_li = soup.find('li', attrs={'itemprop': 'brand'})
         brand = brand_li.find('a')
-        price_float = float(price.text.replace("zł", "").strip().replace(",", "."))
+        price_float = float(price.text.replace("\xa0", "").replace("zł", "").strip().replace(",", "."))
 
         self.name = name.text
         self.price = price_float
@@ -139,13 +146,14 @@ class Product:
         description_element = soup.find('div', class_='product-description', itemprop='description')
         if description_element:
             paragraphs = description_element.find_all('p')
-            self.description = [p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)]
+            if paragraphs:
+                self.description = [p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)]
+            else:
+                self.description = ["Brak opisu!"]
         else:
             self.description = ["Brak opisu"]
     
      
-    # TODO: czy pobierać wszystkie zdjęcia?
-    # TODO: large i medium to często to samo - chyba trzeba wywalić jeden z nich
     def _find_and_set_images(self, soup: BeautifulSoup, images_dir: str) -> None:
         """
         Wyłuskanie obrazów produktu. 
@@ -156,12 +164,17 @@ class Product:
         """
         
         gallery_element = soup.find('ul', class_='product-images js-qv-product-images')
+        if not gallery_element:
+            print('No gallery! aborting')
+        
         gallery_items = gallery_element.find_all('img')
+        if not gallery_items:
+            print('No gallery items! aborting')
+        
         
         for idx, item in enumerate(gallery_items):
             images = {
                 'large': item['data-image-large-src'],    
-                #'medium': item['data-image-medium-src'], ?
                 'default': item['src']
             }
             
@@ -276,6 +289,24 @@ def scrape_pages_count(link) -> int:
     
     return pages_count_info
 
+
+def is_page_404_or_empty(soup: BeautifulSoup) -> bool:
+    """
+    Sprawdza czy to strona 404 lub pusta sekcja (np. brak produktów danej kategorii).
+    
+    Args:
+        soup (BeautifulSoup): Kontekst HTML.
+
+    Returns:
+        bool: Flaga.
+    """
+    
+    page_not_found_element = soup.find('section', class_='page-content page-not-found')
+    
+    if page_not_found_element:
+        return True
+    return False
+    
     
 # WARNING: executing this function takes some time
 def scrape_products_from_category(category: Category) -> list[Product]:
@@ -295,41 +326,50 @@ def scrape_products_from_category(category: Category) -> list[Product]:
     
     # FIXME: I decided that it's better to limit data scrapping to 48 elements per category.
     for page in range(1, min(4, pages_count+1)):
+    # for page in range(1, 2): # TODO: only for tests
         html = get_html_with_requests(f"{link}?page={page}")
         soup = BeautifulSoup(html, 'html.parser')
 
-        products_elements = soup.find_all('article', class_='product-miniature js-product-miniature')
+        if is_page_404_or_empty(soup):
+            print(f'{category=} is empty.')
+            continue
+            
+        products_element = soup.find_all('article', class_='product-miniature js-product-miniature')
 
-        for product_element in products_elements:
+        if not products_element:
+            print(f'{category=} products page not found.')
+            continue
+
+        for product_element in products_element:
             product_link = product_element.find('a')['href']
 
+            if not product_element:
+                print(f'{category=} product element not found.')
+                continue
+                
             product = Product(
                 link=product_link,
                 category=category
             )
             
-            # TODO: this should have been defined somewhere
-            product.scrape('../scrapper_results/images')
-            
+            product.scrape(IMAGES_DIR)
+
             products.append(product)
     
             
-    return product
+    return products
             
 
 def save_products_to_json(products: list[Product]):
-    with open('../scrapper_results/json/products.json', 'w', encoding='utf-8') as f:
+    with open(PRODUCTS_JSON, 'w', encoding='utf-8') as f:
         json.dump([p.to_dict() for p in products], f, indent=4, ensure_ascii=False)
     
 
 def save_categories_to_json(categories: list[Category]):
-    with open('../scrapper_results/json/categories.json', 'w', encoding='utf-8') as f:
+    with open(CATEGORIES_JSON, 'w', encoding='utf-8') as f:
         json.dump([c.to_dict() for c in categories], f, indent=4, ensure_ascii=False)
     
 
-# FIXME: random errors with converting price to float
-# FIXME: random errors with NoneType (probably broken links)
-# TODO: 404 checking - that would solve some problems
 # TODO: refactor :D
 def main():    
     url = "https://iklamki.pl/pl/"
@@ -338,12 +378,13 @@ def main():
     
     save_categories_to_json(categories)
     
+    # flattening of structure
     all_subcats = [
         sub
         for category in categories
         for sub in (category.subcategories or [category])
     ]
-    
+        
     products = []    
     
     with ThreadPoolExecutor(max_workers=10) as executor:
