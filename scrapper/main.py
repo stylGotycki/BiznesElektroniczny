@@ -374,7 +374,6 @@ def scrape_products_from_category(category: Category) -> list[Product]:
     
     # FIXME: I decided that it's better to limit data scrapping to 48 elements per category.
     for page in range(1, min(5, pages_count+1)):
-    # for page in range(1, 2): # TODO: only for tests
         html = get_html_with_requests(f"{link}?page={page}")
         soup = BeautifulSoup(html, 'html.parser')
 
@@ -428,38 +427,38 @@ def main():
     url = "https://iklamki.pl/pl/"
     html = get_html_with_requests(url)
     
-    # categories = scrape_categories(html)
-    # save_categories_to_json(categories)
+    categories = scrape_categories(html)
+    save_categories_to_json(categories)
     
     manufacturers = scrape_manufacturers()
     save_manufacturers_to_json(manufacturers)
     
     # flattening of structure
-    # all_subcats = [
-    #     sub
-    #     for category in categories
-    #     for sub in (category.subcategories or [category])
-    # ]
+    all_subcats = [
+        sub
+        for category in categories
+        for sub in (category.subcategories or [category])
+    ]
         
-    # products = []    
+    products = []    
     
-    # with ThreadPoolExecutor(max_workers=10) as executor:
-    #     future_to_cat = {
-    #         executor.submit(scrape_products_from_category, cat): cat
-    #         for cat in all_subcats
-    #     }
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_cat = {
+            executor.submit(scrape_products_from_category, cat): cat
+            for cat in all_subcats
+        }
 
-    #     for future in as_completed(future_to_cat):
-    #         cat = future_to_cat[future]
-    #         try:
-    #             scraped = future.result()
-    #             products.extend(scraped)
-    #             print(f"Scraped {len(scraped)} products from {cat.name}")
-    #         except Exception as e:
-    #             print(f"Error scraping {cat.name}: {e}")
+        for future in as_completed(future_to_cat):
+            cat = future_to_cat[future]
+            try:
+                scraped = future.result()
+                products.extend(scraped)
+                print(f"Scraped {len(scraped)} products from {cat.name}")
+            except Exception as e:
+                print(f"Error scraping {cat.name}: {e}")
     
     
-    # save_products_to_json(products)
+    save_products_to_json(products)
         
 
 if __name__ == "__main__":
