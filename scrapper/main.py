@@ -6,9 +6,28 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+BRAND_IMAGES_DIR = '../scrapper_results/manufacturer_images'
 IMAGES_DIR = '../scrapper_results/images'
 PRODUCTS_JSON = '../scrapper_results/json/products.json'
 CATEGORIES_JSON = '../scrapper_results/json/categories.json'
+BRANDS_JSON = '../scrapper_results/json/manufacturers.json'
+
+
+class Manufacturer:
+    """ 
+    Marka na stronie.
+    """
+    
+    def __init__(self, name, images):
+        self.name = name
+        self.images = images
+
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "images": self.images
+        }
 
 
 class Category:
@@ -59,7 +78,7 @@ class Category:
 
 class Product:
     """
-    Widok produktu na stronie.
+    Produkt na stronie.
     """
     
     def __init__(self, link: str, category: Category):
@@ -75,7 +94,7 @@ class Product:
         self.link = link
         self.images = []
         self.price = None
-        self.brand = None
+        self.manufacturer = None
         self.description = None
         self.category = category
         
@@ -92,20 +111,18 @@ class Product:
             "name": self.name,
             "images": self.images,
             "price": self.price,
-            "manufacturer": self.brand,
+            "manufacturer": self.manufacturer,
+            "category": self.category.name,
             "description": self.description
         }
     
     
-    def scrape(self, images_dir: str) -> bool:
+    def scrape(self, images_dir: str):
         """
         Scrapping informacji o produkcie. Następnie aktualizacja obiektu i zapis zdjęć we wskazanym katalogu.
 
         Args:
             images_dir (str): Nazwa katalogu, w którym będą zapisane zdjęcia produktu.
-        
-        Returns:
-            bool: Sukces lub porażka
         """
         
         response = requests.get(self.link)
@@ -114,11 +131,11 @@ class Product:
         self._find_and_set_rest(soup)
         self._find_and_set_description(soup)
         self._find_and_set_images(soup, images_dir)
-    
+
     
     def _find_and_set_rest(self, soup: BeautifulSoup) -> None:
         """
-        Wyłuskuje nazwę, cenę i brand.
+        Wyłuskuje nazwę, cenę i manufacturer.
         
         Args:
             soup (BeautifulSoup): Kontekst HTML.
@@ -126,13 +143,13 @@ class Product:
 
         name = soup.find('h1', class_='h1 product-name', attrs={'itemprop': 'name'})
         price = soup.find('span', attrs={'itemprop': 'price'})
-        brand_li = soup.find('li', attrs={'itemprop': 'brand'})
-        brand = brand_li.find('a')
+        manufacturer_li = soup.find('li', attrs={'itemprop': 'brand'})
+        manufacturer = manufacturer_li.find('a')
         price_float = float(price.text.replace("\xa0", "").replace("zł", "").strip().replace(",", "."))
 
         self.name = name.text
         self.price = price_float
-        self.brand = brand.text
+        self.manufacturer = manufacturer.text
         
         
     def _find_and_set_description(self, soup: BeautifulSoup) -> None:
@@ -233,6 +250,37 @@ def direct_text(element):
     return " ".join(parts).strip()
 
 
+def scrape_manufacturers() -> list[Manufacturer]:
+    """
+    Scraping marek.
+
+    Returns:
+        list[Manufacturer]: Lista marek.
+    """
+    html = get_html_with_requests("https://iklamki.pl/pl/brands")
+    soup = BeautifulSoup(html, 'html.parser')
+
+    manufacturers = []
+    manufacturer_elements = soup.find_all('li', class_='brand') 
+
+    print(len(manufacturer_elements))
+
+    for manufacturer_element in manufacturer_elements:
+        manufacturer_infos_el = manufacturer_element.find('div', class_='brand-infos')
+        name = manufacturer_infos_el.find('a').text.strip()        
+        image_src = manufacturer_element.find('img')['src']
+        image_name = f'icon_{name}.jpg'
+        
+        manufacturers.append(Manufacturer(
+            name=name,
+            images=[image_name]
+        ))
+        
+        save_image(image_src, BRAND_IMAGES_DIR, image_name)
+        
+    return manufacturers
+
+
 def scrape_categories(html) -> list[Category]:
     """
     Zwraca kategorie produktów.
@@ -325,7 +373,7 @@ def scrape_products_from_category(category: Category) -> list[Product]:
     products = []
     
     # FIXME: I decided that it's better to limit data scrapping to 48 elements per category.
-    for page in range(1, min(4, pages_count+1)):
+    for page in range(1, min(5, pages_count+1)):
     # for page in range(1, 2): # TODO: only for tests
         html = get_html_with_requests(f"{link}?page={page}")
         soup = BeautifulSoup(html, 'html.parser')
@@ -368,42 +416,50 @@ def save_products_to_json(products: list[Product]):
 def save_categories_to_json(categories: list[Category]):
     with open(CATEGORIES_JSON, 'w', encoding='utf-8') as f:
         json.dump([c.to_dict() for c in categories], f, indent=4, ensure_ascii=False)
-    
+
+
+def save_manufacturers_to_json(manufacturers: list[Manufacturer]):
+    with open(BRANDS_JSON, 'w', encoding='utf-8') as f:
+        json.dump([b.to_dict() for b in manufacturers], f, indent=4, ensure_ascii=False) 
+
 
 # TODO: refactor :D
 def main():    
     url = "https://iklamki.pl/pl/"
     html = get_html_with_requests(url)
-    categories = scrape_categories(html)
     
-    save_categories_to_json(categories)
+    # categories = scrape_categories(html)
+    # save_categories_to_json(categories)
+    
+    manufacturers = scrape_manufacturers()
+    save_manufacturers_to_json(manufacturers)
     
     # flattening of structure
-    all_subcats = [
-        sub
-        for category in categories
-        for sub in (category.subcategories or [category])
-    ]
+    # all_subcats = [
+    #     sub
+    #     for category in categories
+    #     for sub in (category.subcategories or [category])
+    # ]
         
-    products = []    
+    # products = []    
     
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        future_to_cat = {
-            executor.submit(scrape_products_from_category, cat): cat
-            for cat in all_subcats
-        }
+    # with ThreadPoolExecutor(max_workers=10) as executor:
+    #     future_to_cat = {
+    #         executor.submit(scrape_products_from_category, cat): cat
+    #         for cat in all_subcats
+    #     }
 
-        for future in as_completed(future_to_cat):
-            cat = future_to_cat[future]
-            try:
-                scraped = future.result()
-                products.extend(scraped)
-                print(f"Scraped {len(scraped)} products from {cat.name}")
-            except Exception as e:
-                print(f"Error scraping {cat.name}: {e}")
+    #     for future in as_completed(future_to_cat):
+    #         cat = future_to_cat[future]
+    #         try:
+    #             scraped = future.result()
+    #             products.extend(scraped)
+    #             print(f"Scraped {len(scraped)} products from {cat.name}")
+    #         except Exception as e:
+    #             print(f"Error scraping {cat.name}: {e}")
     
     
-    save_products_to_json(products)
+    # save_products_to_json(products)
         
 
 if __name__ == "__main__":

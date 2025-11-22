@@ -44,4 +44,9 @@ P.S. trzeba chwilkę poczekać.
 - [x] save scrapped data to json
 
 - [ ] post scrapped data to prestashop
+
+- [ ] download brand data
+    - name
+    - image 
+    - check if relation between brand and product is correct
     
