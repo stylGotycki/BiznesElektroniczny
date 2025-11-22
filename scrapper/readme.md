@@ -44,14 +44,26 @@ P.S. trzeba chwilkę poczekać.
 - [x] save scrapped data to json
 
 
-- [ ] post scrapped data to prestashop
+- [x] post scrapped data to prestashop
     - [x] categories
-    - [ ] manufacturers
-    - [ ] products
-    - [ ] images
+    - [x] manufacturers
+    - [x] products
+    - [x] images
 
 - [x] download brand data
     - name
     - image 
     - check if relation between brand and product is correct
     
+
+## todo part 2.
+
+- [ ] brand
+    - [ ] scrape more data (desc etc.)
+
+- [ ] products
+    - [ ] random quantity during creation (at least 10)
+    - [ ] change language to PL
+
+- [ ] catalog : products
+    - how to fix this?
