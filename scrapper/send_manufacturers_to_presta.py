@@ -80,6 +80,31 @@ def upload_manufacturers():
     for m in manufacturers:
         mid = get_or_create_manufacturer(m["name"])
         print(f"Manufacturer: {m['name']} -> ID {mid}")
-        
-        
-upload_manufacturers()
+
+
+def delete_all_manufacturers():
+    r = requests.get(f"{API_URL}/manufacturers", auth=(API_KEY, ""))
+    if r.status_code != 200:
+        print(r.text)
+        raise Exception("Cannot read manufacturers list")
+
+    root = ET.fromstring(r.text)
+    manufacturer_ids = [int(n.attrib["id"]) for n in root.findall(".//manufacturer")]
+
+    print("Found manufacturers:", manufacturer_ids)
+
+    for mid in manufacturer_ids:
+        print(f"Deleting manufacturer {mid}...")
+        dr = requests.delete(f"{API_URL}/manufacturers/{mid}", auth=(API_KEY, ""))
+
+        if dr.status_code in (200, 204):
+            print(f"Deleted {mid}")
+        else:
+            print(f"Failed deleting {mid}: {dr.status_code} – {dr.text}")
+
+    print("Done deleting manufacturers.")
+
+
+delete_all_manufacturers()
+      
+# upload_manufacturers()

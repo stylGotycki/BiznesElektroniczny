@@ -102,6 +102,37 @@ def upload_categories():
             
                 print(f"Category: {subcat['name']} -> ID {cat_id2}")
 
+
+def delete_all_categories():
+    r = requests.get(f"{API_URL}/categories", auth=(API_KEY, ""))
+    if r.status_code != 200:
+        print(r.text)
+        raise Exception("Cannot read categories list")
+
+    root = ET.fromstring(r.text)
+    category_ids = [int(node.attrib["id"]) for node in root.findall(".//category")]
+
+    print("Found:", category_ids)
+
+    for cid in category_ids:
+        if cid in (1, 2):
+            print(f"Skipping category {cid} (root/home)")
+            continue
+        
+        print(f"Deleting category {cid}...")
+        dr = requests.delete(f"{API_URL}/categories/{cid}", auth=(API_KEY, ""))
+        
+        if dr.status_code in (200, 204):
+            print(f"Deleted category {cid}")
+        else:
+            print(f"Failed deleting {cid}: {dr.status_code} – {dr.text}")
+
+    print("Done.")
+
+
+delete_all_categories()
+
+
 # it works!
-upload_categories()
+# upload_categories()
 

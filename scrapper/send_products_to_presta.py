@@ -32,9 +32,14 @@ category_cache = load_category_cache()
 manufacturer_cache = load_manufacturer_cache()
 
 
+
 def get_or_create_product(product, category_cache, manufacturer_cache):
     category_id = category_cache[product["category"]]
-    # TODO: REGUITTI
+    
+    # ehhh
+    if manufacturer_cache[product["manufacturer"]] not in manufacturer_cache:
+        return
+    
     manufacturer_id = manufacturer_cache[product["manufacturer"]]
 
     name = escape(product["name"])
@@ -116,13 +121,11 @@ def upload_products_and_images():
         upload_product_images(pid, "../scrapper_results/images", prod["images"])
         
 
-
-
 def delete_all_products_and_images():
     """
-    Deletes all products and any leftover images in PrestaShop via Webservice.
+    Usuwa wszystkie produkty i obrazki w PrestaShopie przez Webservice.
     """
-    # Step 1: Get all product IDs
+
     r = requests.get(f"{API_URL}/products?display=[id]", auth=(API_KEY, ""))
     if r.status_code != 200:
         print("Failed to fetch products:", r.text)
@@ -132,7 +135,7 @@ def delete_all_products_and_images():
     product_ids = [int(node.find("id").text) for node in root.findall(".//product")]
     print(f"Found {len(product_ids)} products.")
 
-    # Step 2: Delete each product and its images
+
     for pid in product_ids:
         # Delete product images first
         rimg = requests.get(f"{API_URL}/images/products/{pid}", auth=(API_KEY, ""))
@@ -156,7 +159,7 @@ def delete_all_products_and_images():
     print("All products and images have been deleted.")
 
 
-# delete_all_products_and_images()
+delete_all_products_and_images()
 
 
-upload_products_and_images()
+# upload_products_and_images()
