@@ -35,7 +35,7 @@ class Category:
     Kategoria na stronie.
     """
     
-    def __init__(self, name, link, parent_hierarchy=None):
+    def __init__(self, name, link, index, description, parent_hierarchy=None):
         """
         Konstruktor.
 
@@ -47,6 +47,8 @@ class Category:
         self.name = name
         self.link = link
         self.parent_hierarchy = parent_hierarchy
+        self.index = index
+        self.description = description
         self.subcategories = []
         
         
@@ -70,8 +72,11 @@ class Category:
         """
         
         return {
+            "index": self.index,
+            "parent_hierarchy": self.parent_hierarchy,
             "name": self.name,
             "link": self.link,
+            "description": self.description,
             "subcategories": [sub.to_dict() for sub in self.subcategories]
         }
 
@@ -281,6 +286,22 @@ def scrape_manufacturers() -> list[Manufacturer]:
     return manufacturers
 
 
+def scrape_category_description(link: str) -> list[str]:
+    category_page = get_html_with_requests(link)
+    category_page_soup = BeautifulSoup(category_page, 'html.parser')
+    desc = category_page_soup.find('div', class_='text-muted', id='category-description')
+    
+    paragraphs = []
+
+    if desc:
+        for tag in desc.find_all(["p", "h2", "h3"]):
+            text = tag.get_text(separator=" ", strip=True)
+            if text:
+                paragraphs.append(text)
+                
+    return paragraphs
+
+
 def scrape_categories(html) -> list[Category]:
     """
     Zwraca kategorie produktów.
@@ -300,7 +321,9 @@ def scrape_categories(html) -> list[Category]:
         raise RuntimeError("No top menu with data-depth=1 found")
 
     categories = []
-
+    # ehh, hope this works
+    counter = 10
+    
     for li in top_menu.find_all("li", class_="category", recursive=False):
         a = li.find("a", class_="dropdown-item")
         if not a:
@@ -308,7 +331,18 @@ def scrape_categories(html) -> list[Category]:
         
         name = direct_text(a) or a.get_text(strip=True)
         link = a.get("href")
-        parent = Category(name, link)
+        
+        description = scrape_category_description(link)
+        
+        # reference to home category
+        parent = Category(
+            name, 
+            link, 
+            parent_hierarchy=2, 
+            index=counter, 
+            description=description
+        )
+        counter += 1
 
         submenu = li.find("ul", attrs={"data-depth": "2"})
         if submenu:
@@ -318,7 +352,16 @@ def scrape_categories(html) -> list[Category]:
                     continue
                 sub_name = direct_text(a2) or a2.get_text(strip=True)
                 sub_link = a2.get("href")
-                child = Category(sub_name, sub_link, parent_hierarchy=parent.name)
+                description = scrape_category_description(sub_link)
+                
+                child = Category(
+                    sub_name, 
+                    sub_link, 
+                    parent_hierarchy=parent.index, 
+                    index=counter,
+                    description=description
+                )
+                counter += 1
                 parent.add_subcategory(child)
 
         categories.append(parent)
@@ -372,8 +415,8 @@ def scrape_products_from_category(category: Category) -> list[Product]:
     
     products = []
     
-    # FIXME: I decided that it's better to limit data scrapping to 48 elements per category.
-    for page in range(1, min(5, pages_count+1)):
+    # no limiting lol    
+    for page in range(1, pages_count):
         html = get_html_with_requests(f"{link}?page={page}")
         soup = BeautifulSoup(html, 'html.parser')
 
@@ -422,17 +465,22 @@ def save_manufacturers_to_json(manufacturers: list[Manufacturer]):
         json.dump([b.to_dict() for b in manufacturers], f, indent=4, ensure_ascii=False) 
 
 
-# TODO: refactor :D
-def main():    
+def handle_categories():
     url = "https://iklamki.pl/pl/"
     html = get_html_with_requests(url)
     
     categories = scrape_categories(html)
     save_categories_to_json(categories)
-    
+
+    return categories
+
+
+def handle_manufactures():
     manufacturers = scrape_manufacturers()
     save_manufacturers_to_json(manufacturers)
-    
+
+
+def handle_products(categories):
     # flattening of structure
     all_subcats = [
         sub
@@ -459,7 +507,13 @@ def main():
     
     
     save_products_to_json(products)
-        
 
+
+def main():    
+    categories = handle_categories()    
+    # handle_manufactures()
+    # handle_products(categories)
+    
+        
 if __name__ == "__main__":
     main()
