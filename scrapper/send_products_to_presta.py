@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
+from random import randint
 
 CATEGORY_CACHE = Path("category_ids.json")
 MANUFACTURER_CACHE = Path("manufacturers_ids.json")
@@ -32,12 +33,18 @@ category_cache = load_category_cache()
 manufacturer_cache = load_manufacturer_cache()
 
 
+def generate_description(description: list) -> str:
+    output: str = ''
+    for line in description:
+        output += f"<p>{line}</p>"
+    return output
+
 
 def get_or_create_product(product, category_cache, manufacturer_cache):
     category_id = category_cache[product["category"]]
     
-    # ehhh
-    if manufacturer_cache[product["manufacturer"]] not in manufacturer_cache:
+    if product["manufacturer"] not in manufacturer_cache:
+        print(f"Manufacturer {product['manufacturer']} not found!")
         return
     
     manufacturer_id = manufacturer_cache[product["manufacturer"]]
@@ -45,33 +52,36 @@ def get_or_create_product(product, category_cache, manufacturer_cache):
     name = escape(product["name"])
     slug = escape(slugify(name))
     price = product["price"]
-    description = product["description"][0] if product["description"] else ""
-    description_short = description[:600]
+    description = generate_description(product["description"]) if product["description"] else "Brak opisu!"
+    description_short = product["description"][0] if product["description"] else "Brak opisu!"
 
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
   <product>
     <id_category_default>{category_id}</id_category_default>
     <id_manufacturer>{manufacturer_id}</id_manufacturer>
+    <id_tax_rules_group>1</id_tax_rules_group>
     <active>1</active>
+    <reference>{slug[:60]}</reference>
+    <show_price>1</show_price>
+    <available_for_order>1</available_for_order>
+    <state>1</state>
+    <minimal_quantity>1</minimal_quantity>
+    <indexed>1</indexed>
     <price>{price}</price>
     <name><language id="1">{name}</language></name>
-    <description_short><language id="1">{description_short}</language></description_short>
+    <description_short><language id="1">{description_short[:750]}</language></description_short>
     <description><language id="1">{description}</language></description>
     <link_rewrite><language id="1">{slug}</language></link_rewrite>
-    <visibility><![CDATA[both]]></visibility>
+    <visibility>both</visibility>
     <associations>
       <categories>
         <category><id>{category_id}</id></category>
       </categories>
-      <stock_availables>
-        <stock_available>
-          <id>0</id>
-          <id_product_attribute>0</id_product_attribute>
-          <quantity>10</quantity>
-        </stock_available>
-      </stock_availables>
     </associations>
+    <meta_title>{name[:32]}</meta_title>
+    <meta_description>{name[:32]}</meta_description>
+    <meta_keywords>{name[:32]}</meta_keywords>
   </product>
 </prestashop>
 """
@@ -93,10 +103,6 @@ def get_or_create_product(product, category_cache, manufacturer_cache):
 
 
 def upload_product_images(product_id, images_folder, image_files):
-    """
-    images_folder: path to your local images
-    image_files: list of filenames
-    """
     for img in image_files:
         with open(f"{images_folder}/{img}", "rb") as f:
             files = {"image": f}
@@ -114,12 +120,61 @@ def upload_products_and_images():
     with open("../scrapper_results/json/products.json", "r", encoding="utf-8") as f:
         products = json.load(f)
 
+    
     for prod in products:
-        pid = get_or_create_product(prod, load_category_cache(), load_manufacturer_cache())
+        pid = get_or_create_product(prod, category_cache, manufacturer_cache)
+        if pid is None:
+            print(f"Skipping product {prod['name']} because it was not created")
+            continue
+        
         print(f"Created product {prod['name']} -> ID {pid}")
 
         upload_product_images(pid, "../scrapper_results/images", prod["images"])
+        set_product_quantity(pid, randint(0, 10))
         
+
+def set_product_quantity(product_id, quantity):
+    params = {
+        "filter[id_product]": product_id,
+        "display": "full"
+    }
+    r_stock = requests.get(f"{API_URL}/stock_availables", params=params, auth=(API_KEY, ""), verify=False)
+    # print(r_stock.text)
+    root = ET.fromstring(r_stock.text)
+    stock_id = str(root.find(".//stock_available/id").text)
+    id_shop = str(root.find(".//stock_available/id_shop").text)
+    id_product_attribute = str(root.find(".//stock_available/id_product_attribute").text)
+    id_shop_group = str(root.find(".//stock_available/id_shop_group").text)
+    depends_on_stock = str(root.find(".//stock_available/depends_on_stock").text)
+    location = str(root.find(".//stock_available/location").text)
+    
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+  <stock_available>
+    <id>{stock_id}</id>
+    <id_product>{product_id}</id_product>
+    <id_product_attribute>{id_product_attribute}</id_product_attribute>
+    <quantity>{quantity}</quantity>
+    <id_shop>{id_shop}</id_shop>
+    <id_shop_group>{id_shop_group}</id_shop_group>
+    <location>{location}</location>
+    <depends_on_stock>{depends_on_stock}</depends_on_stock>
+    <out_of_stock>0</out_of_stock>
+  </stock_available>
+</prestashop>
+"""
+    r = requests.put(
+        f"{API_URL}/stock_availables",
+        data=xml.encode("utf-8"),
+        headers={"Content-Type": "application/xml"},
+        auth=(API_KEY, "")
+    )
+    if r.status_code not in (200, 201):
+        print("Failed to set stock:", r.text)
+    else:
+        print(f"Stock set for product {product_id} -> {quantity}")
+        
+
 
 def delete_all_products_and_images():
     """
@@ -161,5 +216,4 @@ def delete_all_products_and_images():
 
 delete_all_products_and_images()
 
-
-# upload_products_and_images()
+upload_products_and_images()

@@ -105,6 +105,6 @@ def delete_all_manufacturers():
     print("Done deleting manufacturers.")
 
 
-delete_all_manufacturers()
+# delete_all_manufacturers()
       
-# upload_manufacturers()
+upload_manufacturers()

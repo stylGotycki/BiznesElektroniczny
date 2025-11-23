@@ -58,12 +58,10 @@ P.S. trzeba chwilkę poczekać.
 
 ## todo part 2.
 
-- [ ] brand
-    - [ ] scrape more data (desc etc.)
+- [x] brand
+    - [x] scrape more data (desc etc.)
 
-- [ ] products
-    - [ ] random quantity during creation (at least 10)
-    - [ ] change language to PL
+- [x] products
+    - [x] random quantity during creation (at least 10)
+    - [x] change language to PL
 
-- [ ] catalog : products
-    - how to fix this?

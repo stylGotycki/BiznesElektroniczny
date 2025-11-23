@@ -149,12 +149,17 @@ class Product:
         name = soup.find('h1', class_='h1 product-name', attrs={'itemprop': 'name'})
         price = soup.find('span', attrs={'itemprop': 'price'})
         manufacturer_li = soup.find('li', attrs={'itemprop': 'brand'})
-        manufacturer = manufacturer_li.find('a')
+        
+        if manufacturer_li is not None:
+            manufacturer = manufacturer_li.find('a').text
+        else:
+            manufacturer = "No manufacturer!"
+            
         price_float = float(price.text.replace("\xa0", "").replace("zł", "").strip().replace(",", "."))
 
         self.name = name.text
         self.price = price_float
-        self.manufacturer = manufacturer.text
+        self.manufacturer = manufacturer
         
         
     def _find_and_set_description(self, soup: BeautifulSoup) -> None:
@@ -375,7 +380,9 @@ def scrape_pages_count(link) -> int:
 
     ul_element = soup.find('ul', class_='page-list clearfix text-sm-center')
     
-    # TODO: I'm not sure about this solution : P
+    if ul_element is None:
+        return 1
+    
     pages_count_info = int(ul_element.find_all('li')[-2].text)
     
     return pages_count_info
@@ -392,9 +399,8 @@ def is_page_404_or_empty(soup: BeautifulSoup) -> bool:
         bool: Flaga.
     """
     
-    page_not_found_element = soup.find('section', class_='page-content page-not-found')
-    
-    if page_not_found_element:
+    page_not_found_element = soup.find('section', class_='page-content page-not-found', id='content')
+    if page_not_found_element is not None:
         return True
     return False
     
@@ -415,38 +421,39 @@ def scrape_products_from_category(category: Category) -> list[Product]:
     
     products = []
     
-    # no limiting lol    
-    for page in range(1, pages_count):
+    print(f"{pages_count=}")
+    
+    for page in range(1, min(11, pages_count+1), 1):
         html = get_html_with_requests(f"{link}?page={page}")
         soup = BeautifulSoup(html, 'html.parser')
 
         if is_page_404_or_empty(soup):
-            print(f'{category=} is empty.')
+            print(f'{category.name} is empty.')
             continue
             
         products_element = soup.find_all('article', class_='product-miniature js-product-miniature')
-
-        if not products_element:
-            print(f'{category=} products page not found.')
+        if products_element is None:
+            print(f'{category.name} products page not found.')
             continue
-
+        
         for product_element in products_element:
-            product_link = product_element.find('a')['href']
-
-            if not product_element:
+            if product_element is None:
                 print(f'{category=} product element not found.')
                 continue
-                
+            
+            product_link = product_element.find('a')['href']
+            
             product = Product(
                 link=product_link,
                 category=category
             )
             
+            print(f"started scraping product from {category.name}")
             product.scrape(IMAGES_DIR)
-
+            print(f"{product.name} scraped!")
+            
             products.append(product)
     
-            
     return products
             
 
@@ -481,7 +488,6 @@ def handle_manufactures():
 
 
 def handle_products(categories):
-    # flattening of structure
     all_subcats = [
         sub
         for category in categories
@@ -505,14 +511,13 @@ def handle_products(categories):
             except Exception as e:
                 print(f"Error scraping {cat.name}: {e}")
     
-    
     save_products_to_json(products)
 
 
 def main():    
-    categories = handle_categories()    
-    # handle_manufactures()
-    # handle_products(categories)
+    categories = handle_categories()
+    #handle_manufactures()
+    handle_products(categories)
     
         
 if __name__ == "__main__":

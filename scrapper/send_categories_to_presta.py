@@ -24,10 +24,16 @@ def save_category_cache(cache):
     CATEGORY_CACHE.write_text(json.dumps(cache, indent=2, ensure_ascii=False))
 
 
+def generate_description(description: list) -> str:
+    output: str = ''
+    for line in description:
+        output += f"<p>{line}</p>"
+    return output
 
-def get_or_create_category(name):
+
+def get_or_create_category(name, description, parent=2):
     cache = load_category_cache()
-
+    
     if name in cache:
         return cache[name]
 
@@ -56,14 +62,20 @@ def get_or_create_category(name):
 
 
     link_rewrite = slugify(name)
-
+    
+    description_short = generate_description(description[:80]) if description else 'Brak opisu'
+    
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
   <category>
-    <id_parent>2</id_parent>
+    <id_parent>{parent}</id_parent>
     <active>1</active>
     <name><language id="1">{name}</language></name>
     <link_rewrite><language id="1">{link_rewrite}</language></link_rewrite>
+    <description><language id="1">{generate_description(description)}</language></description>
+    <meta_title><language id="1">{name}</language></meta_title>
+    <meta_description><language id="1">{description_short}</language></meta_description>
+    <meta_keywords><language id="1">{name}</language></meta_keywords>
   </category>
 </prestashop>
 """
@@ -75,6 +87,8 @@ def get_or_create_category(name):
         auth=(API_KEY, "")
     )
 
+    print(r.text)
+    
     if r.status_code not in (200, 201):
         print(r.text)
         raise Exception(f"Failed to create category {name}")
@@ -93,12 +107,12 @@ def upload_categories():
         categories = json.load(f)
     
     for cat in categories:
-        cat_id = get_or_create_category(cat['name'])
+        cat_id = get_or_create_category(cat['name'], cat['description'])
         print(f"Category: {cat['name']} -> ID {cat_id}")
         
-        if cat['subcategories'] is not None:    
+        if cat['subcategories'] is not None:  
             for subcat in cat['subcategories']:
-                cat_id2 = get_or_create_category(subcat['name'])
+                cat_id2 = get_or_create_category(subcat['name'], subcat['description'], cat_id)
             
                 print(f"Category: {subcat['name']} -> ID {cat_id2}")
 
@@ -125,14 +139,13 @@ def delete_all_categories():
         if dr.status_code in (200, 204):
             print(f"Deleted category {cid}")
         else:
-            print(f"Failed deleting {cid}: {dr.status_code} – {dr.text}")
+            print(f"Failed deleting {cid}: {dr.status_code} - {dr.text}")
 
     print("Done.")
 
 
-delete_all_categories()
+# delete_all_categories()
 
 
-# it works!
-# upload_categories()
+upload_categories()
 
