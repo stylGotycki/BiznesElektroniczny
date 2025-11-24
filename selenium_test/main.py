@@ -17,12 +17,17 @@ def wait(time_s: int = 1):
     time.sleep(time_s)
 
 def add_to_cart(quantity: int = 1):
-    product_plus_quantity = driver.find_element(By.XPATH,"//*[@id=\"add-to-cart-or-refresh\"]/div[2]/div/div[1]/div/span[3]/button[1]")
+    product_plus_quantity = driver.find_element(By.CSS_SELECTOR,"button.btn.btn-touchspin.js-touchspin.bootstrap-touchspin-up")
+    product_minus_quantity = driver.find_element(By.CSS_SELECTOR,"button.btn.btn-touchspin.js-touchspin.bootstrap-touchspin-down")
 
     for _ in range(quantity-1):
         product_plus_quantity.click()
 
     wait()
+
+    while driver.find_elements(By.CSS_SELECTOR, "i.material-icons.product-unavailable"):
+        product_minus_quantity.click()
+        wait()
 
     add_to_cart_btn = driver.find_element(By.XPATH, "//*[@id=\"add-to-cart-or-refresh\"]/div[2]/div/div[2]/button")
     add_to_cart_btn.click()
@@ -47,33 +52,61 @@ def add_to_cart(quantity: int = 1):
 
 # 10 products, different quantity, from two categories
 def add_products_to_cart():
-    wait()
 
-    products_panel = driver.find_element(By.ID, "category-3")
-    ActionChains(driver).move_to_element(products_panel).perform()
-
-    wait()
-
-    #first category
-
-    category_a = driver.find_element(By.ID, "category-4")
-    category_a.click()
+    categories_no = 2
+    products_no = 10
 
     wait()
 
-    #first product
+    category_id = 85
+    while categories_no > 0 or products_no > 0:
+        products_init_no = products_no
 
-    products = driver.find_elements(By.CSS_SELECTOR, ".js-product a.product-thumbnail")
-    products[0].click()
+        products_panel = driver.find_element(By.ID, "category-3")
+        ActionChains(driver).move_to_element(products_panel).perform()
 
-    wait()
+        wait()
 
-    add_to_cart(2)
+        category_found = False
+
+        while not category_found:
+            category = driver.find_elements(By.ID, "category-" + str(category_id))
+            if len(category) > 0:
+                category[0].click()
+                category_found = True
+            category_id += 1
+
+        wait()
+
+        products = driver.find_elements(By.CSS_SELECTOR, "div.js-product.product")
+
+        for i in range(len(products)):
+
+            products = driver.find_elements(By.CSS_SELECTOR, "div.js-product.product")
+
+            if products[i].find_elements(By.CSS_SELECTOR, "li.product-flag.out_of_stock"):
+                continue
+
+            products[i].find_element(By.CSS_SELECTOR, ".js-product a.product-thumbnail").click()
+
+            wait()
+
+            add_to_cart(random.randint(1,5))
+            products_no -= 1
+
+            if not ( ( categories_no >= 2 and products_no > 3 ) or ( categories_no == 1 and products_no > 0) ):
+                break
+
+        if products_init_no > products_no:
+            categories_no -= 1
+
+        wait()
+
 
 # add random product to cart
 def search_for_product():
     search_box = driver.find_element(By.NAME, "s")
-    search_box.send_keys("T-Shirt")
+    search_box.send_keys("piękna klameczka")
 
     wait()
 
@@ -81,9 +114,16 @@ def search_for_product():
 
     wait()
 
-    products = driver.find_elements(By.CSS_SELECTOR, ".js-product a.product-thumbnail")
-    random_product = random.choice(products)
-    random_product.click()
+    products = driver.find_elements(By.CSS_SELECTOR, "div.js-product.product")
+
+    found = False
+    while not found:
+        random_product = random.choice(products)
+        if random_product.find_elements(By.CSS_SELECTOR, "li.product-flag.out_of_stock"):
+            continue
+        else:
+            random_product.find_element(By.CSS_SELECTOR, ".js-product a.product-thumbnail").click()
+            found = True
 
     add_to_cart()
 
@@ -94,10 +134,10 @@ def remove_products():
 
     wait()
 
-    remove_product_btn = driver.find_element(By.CSS_SELECTOR, "a.remove-from-cart")
-    remove_product_btn.click()
-
-    wait()
+    for _ in range(3):
+        remove_product_btns = driver.find_elements(By.CSS_SELECTOR, "a.remove-from-cart")
+        random.choice(remove_product_btns).click()
+        wait()
 
     driver.back()
 
@@ -257,7 +297,6 @@ add_products_to_cart()
 search_for_product()
 remove_products()
 register()
-add_products_to_cart() # <--- TODO delete
 order_products()
 order_status()
 vat_invoice()
