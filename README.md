@@ -45,7 +45,7 @@ docker compose up
 klient : http://localhost:8080     
 admin : http://localhost:8080/adminxxxx  
 login : mruktamara64@gmail.com     
-pass : klameczkapl321 
+pass : klameczkipl321 
 
 ## Przydatne komendy
 
