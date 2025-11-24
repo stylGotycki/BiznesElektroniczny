@@ -69,10 +69,10 @@ def get_or_create_product(product, category_cache, manufacturer_cache):
     <minimal_quantity>1</minimal_quantity>
     <indexed>1</indexed>
     <price>{price}</price>
-    <name><language id="1">{name}</language></name>
-    <description_short><language id="1">{description_short[:750]}</language></description_short>
-    <description><language id="1">{description}</language></description>
-    <link_rewrite><language id="1">{slug}</language></link_rewrite>
+    <name><language id="2">{name}</language></name>
+    <description_short><language id="2">{description_short[:750]}</language></description_short>
+    <description><language id="2">{description}</language></description>
+    <link_rewrite><language id="2">{slug}</language></link_rewrite>
     <visibility>both</visibility>
     <associations>
       <categories>

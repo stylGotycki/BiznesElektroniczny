@@ -31,7 +31,7 @@ def generate_description(description: list) -> str:
     return output
 
 
-def get_or_create_category(name, description, parent=2):
+def get_or_create_category(name, description, parent=3):
     cache = load_category_cache()
     
     if name in cache:
@@ -54,7 +54,8 @@ def get_or_create_category(name, description, parent=2):
         rc = requests.get(f"{API_URL}/categories/{cid}", auth=(API_KEY, ""))
         if rc.status_code == 200:
             rc_xml = ET.fromstring(rc.text)
-            cat_name = rc_xml.find(".//name/language").text
+            lang = rc_xml.find('.//name/language[@id="2"]')
+            cat_name = lang.text.strip() if lang is not None and lang.text else ""
             if name == cat_name:
                 cache[name] = cid
                 save_category_cache(cache)
@@ -70,12 +71,12 @@ def get_or_create_category(name, description, parent=2):
   <category>
     <id_parent>{parent}</id_parent>
     <active>1</active>
-    <name><language id="1">{name}</language></name>
-    <link_rewrite><language id="1">{link_rewrite}</language></link_rewrite>
-    <description><language id="1">{generate_description(description)}</language></description>
-    <meta_title><language id="1">{name}</language></meta_title>
-    <meta_description><language id="1">{description_short}</language></meta_description>
-    <meta_keywords><language id="1">{name}</language></meta_keywords>
+    <name><language id="2">{name}</language></name>
+    <link_rewrite><language id="2">{link_rewrite}</language></link_rewrite>
+    <description><language id="2">{generate_description(description)}</language></description>
+    <meta_title><language id="2">{name}</language></meta_title>
+    <meta_description><language id="2">{description_short}</language></meta_description>
+    <meta_keywords><language id="2">{name}</language></meta_keywords>
   </category>
 </prestashop>
 """
@@ -129,7 +130,7 @@ def delete_all_categories():
     print("Found:", category_ids)
 
     for cid in category_ids:
-        if cid in (1, 2):
+        if cid in (1, 2, 3, 10, 11, 12):
             print(f"Skipping category {cid} (root/home)")
             continue
         
@@ -144,7 +145,7 @@ def delete_all_categories():
     print("Done.")
 
 
-# delete_all_categories()
+delete_all_categories()
 
 
 upload_categories()
