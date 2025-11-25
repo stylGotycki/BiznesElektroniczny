@@ -241,7 +241,7 @@ def order_products():
 
     wait()
 
-    input_radio = driver.find_element(By.ID, "delivery_option_2")
+    input_radio = driver.find_element(By.ID, "delivery_option_6")
     driver.execute_script("arguments[0].click();", input_radio)
 
     wait()
@@ -252,7 +252,7 @@ def order_products():
 
     wait()
 
-    payment_label = driver.find_element(By.CSS_SELECTOR, "label[for='payment-option-1']")
+    payment_label = driver.find_element(By.CSS_SELECTOR, "label[for='payment-option-3']")
     payment_label.click()
 
     wait()
@@ -280,11 +280,20 @@ def order_status():
 
     driver.find_element(By.CSS_SELECTOR, 'a[data-link-action="view-order-details"]').click()
 
+    wait(2)
+
+    driver.back()
+
     wait()
+
 
 # download VAT invoice
 def vat_invoice():
-    pass
+    link = driver.find_element(By.XPATH, "//a[contains(@href,'controller=pdf-invoice')]")
+    link.click()
+
+    wait()
+
 
 driver = webdriver.Chrome()
 
