@@ -40,7 +40,7 @@ def generate_description(description: list) -> str:
     return output
 
 
-def get_or_create_product(product, category_cache, manufacturer_cache):
+def get_or_create_product(product, category_cache, manufacturer_cache, weight):
     category_id = category_cache[product["category"]]
     
     if product["manufacturer"] not in manufacturer_cache:
@@ -69,16 +69,21 @@ def get_or_create_product(product, category_cache, manufacturer_cache):
     <minimal_quantity>1</minimal_quantity>
     <indexed>1</indexed>
     <price>{price}</price>
+
+    <weight>{weight}</weight>
+
     <name><language id="2">{name}</language></name>
     <description_short><language id="2">{description_short[:750]}</language></description_short>
     <description><language id="2">{description}</language></description>
     <link_rewrite><language id="2">{slug}</language></link_rewrite>
     <visibility>both</visibility>
+
     <associations>
       <categories>
         <category><id>{category_id}</id></category>
       </categories>
     </associations>
+
     <meta_title>{name[:32]}</meta_title>
     <meta_description>{name[:32]}</meta_description>
     <meta_keywords>{name[:32]}</meta_keywords>
@@ -120,17 +125,22 @@ def upload_products_and_images():
     with open("../scrapper_results/json/products.json", "r", encoding="utf-8") as f:
         products = json.load(f)
 
-    
-    for prod in products:
-        pid = get_or_create_product(prod, category_cache, manufacturer_cache)
+    for index, prod in enumerate(products):
+        if index == 0:
+            weight = 100.0  # first product gets 100 kg
+        else:
+            weight = round(randint(1, 70) / 100, 2)  # random 0.01–0.70
+
+        pid = get_or_create_product(prod, category_cache, manufacturer_cache, weight)
         if pid is None:
             print(f"Skipping product {prod['name']} because it was not created")
             continue
         
-        print(f"Created product {prod['name']} -> ID {pid}")
+        print(f"Created product {prod['name']} -> ID {pid} (weight = {weight} kg)")
 
         upload_product_images(pid, "../scrapper_results/images", prod["images"])
         set_product_quantity(pid, randint(0, 10))
+
         
 
 def set_product_quantity(product_id, quantity):
