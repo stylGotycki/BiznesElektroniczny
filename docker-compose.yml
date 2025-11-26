@@ -15,7 +15,13 @@ services:
   prestashop:
     image: prestashop/prestashop:1.7.8
     ports:
-      - 8080:80
+    - 80:80      # HTTP
+    - 8080:443      # HTTPS
+    volumes:
+      - ./prestashop:/var/www/html:cached
+      - ./ssl:/etc/apache2/ssl:ro
+      - ./apache/ssl.conf:/etc/apache2/sites-available/ssl.conf:ro
+
     restart: always
     environment:
       PS_DEV_MODE: 1
@@ -23,8 +29,18 @@ services:
       DB_NAME: prestashop
       DB_USER: prestashop
       DB_PASSWORD: prestashop
-    volumes:
-      - ./prestashop:/var/www/html:cached
+      PS_ENABLE_SSL: 1
+      PS_SSL_ENABLED_EVERYWHERE: 1
+      PS_SHOP_DOMAIN: localhost
+      PS_SHOP_DOMAIN_SSL: localhost
+    
+    command: >
+      bash -c "
+        a2enmod ssl rewrite &&
+        a2dissite 000-default &&
+        a2ensite ssl &&
+        exec apache2-foreground
+      "
 
 volumes:
   db_data:
