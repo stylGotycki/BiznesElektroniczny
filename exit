@@ -1,0 +1,511 @@
+[33mcommit 4b6c40d878ae6da9e97bbaa1c840afeee51be254[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/tym-razem-moze[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Mon Nov 24 17:52:55 2025 +0100
+
+    klamki imported successfully + some minor adjustments
+
+[33mcommit f9ddf42659aa78a1ab2bdd15d5f27ae23b98643e[m
+Merge: 017c71a5a 75aec637f
+Author: Konpaw <konrad.pawlowski23@gmail.com>
+Date:   Mon Nov 24 15:37:41 2025 +0100
+
+    Merge pull request #10 from stylGotycki/feature/scraper
+    
+    Scraper feature fully implemented.
+
+[33mcommit 75aec637f8c9f961d12c84b652b3dc159c180cd2[m[33m ([m[1;31morigin/feature/scraper[m[33m)[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Mon Nov 24 15:22:39 2025 +0100
+
+    updating the prestashop_dump.sql - just to be sure
+
+[33mcommit 017c71a5a170a3923448df4c33a1d991006675df[m[33m ([m[1;31morigin/carier[m[33m)[m
+Merge: 7adc80994 591ba6395
+Author: Mikul-xyz <fmikulski@o2.pl>
+Date:   Mon Nov 24 11:51:27 2025 +0100
+
+    Merge pull request #9 from stylGotycki/ustawienia
+    
+    Ustawienia dostawcy i patnosci
+
+[33mcommit 591ba63954632dca65562dbf2a8045c1e932f1d9[m[33m ([m[1;31morigin/ustawienia[m[33m)[m
+Author: Mikul-xyz <fmikulski@o2.pl>
+Date:   Mon Nov 24 09:03:06 2025 +0100
+
+    cash
+
+[33mcommit d89979b9ee4bb089b0038b43c5fe99aa1772577c[m
+Author: Mikul-xyz <fmikulski@o2.pl>
+Date:   Mon Nov 24 08:47:22 2025 +0100
+
+    .
+
+[33mcommit f64aa2af0e3b00dd2ab5b2fbaf067c7c786af4a8[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 21:14:51 2025 +0100
+
+    pull requests issues resolved?
+
+[33mcommit f54635303a858672c18a16ca8ced50a3ff0fb88b[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 21:05:30 2025 +0100
+
+    feature/scraper finished; ready to merge
+
+[33mcommit 10a3d7aaa76a6d6c838b164d0724c2bb552a332b[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 20:52:29 2025 +0100
+
+    zipbomb
+
+[33mcommit 7bc699de50e55dda26fb718fdf35ab49e3c6f107[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 20:38:31 2025 +0100
+
+    scraper: works; api: works
+
+[33mcommit 70a69321f6eb22ddaafcadf252fff1d5b532c4bc[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 14:51:51 2025 +0100
+
+    scraper: category has more data now
+
+[33mcommit f3c1008a824c078f7174d4160314e69e07919cac[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sun Nov 23 14:17:55 2025 +0100
+
+    api: deleting everything works
+
+[33mcommit 7adc80994cbc0d5c0a571bcafe5f3393a81fe013[m
+Merge: 9a6a43d56 be9f7a564
+Author: Mikul-xyz <fmikulski@o2.pl>
+Date:   Sun Nov 23 01:41:48 2025 +0100
+
+    Merge pull request #5 from stylGotycki/przewoznicy
+    
+    driver
+
+[33mcommit be9f7a564c097cae5597d5385f6457d8bd0d6cba[m
+Author: Mikul-xyz <fmikulski@o2.pl>
+Date:   Sun Nov 23 01:26:41 2025 +0100
+
+    driver
+
+[33mcommit ab5006519feb67a9a9012ab70f9e9a842c8e3a07[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 22:59:58 2025 +0100
+
+    ehhh
+
+[33mcommit cd92d89bae76784b9d11fa6fd7b3c8eb0615516d[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 19:49:16 2025 +0100
+
+    zipbomb: posting products
+
+[33mcommit 6b791247fbeaee8eac1cca42a24909274267118a[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 18:38:13 2025 +0100
+
+    api: posting manufacturers works! + small restructure
+
+[33mcommit b0f3731da493de24d1028776bf221a86cdcbd629[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 18:21:59 2025 +0100
+
+    api: sending categories works
+
+[33mcommit 9245daee8bf6232c87372c253731160d610b5050[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 17:36:40 2025 +0100
+
+    scrapper finally done
+
+[33mcommit af7819fa30075726c0031bfefa5a2d1e66f8ee7e[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 17:34:51 2025 +0100
+
+    added manufacturers
+
+[33mcommit bd56b9f18917e89e2bde677ff751e01b4661ec61[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 16:09:50 2025 +0100
+
+    scraper works :)
+
+[33mcommit 9a6a43d567510550d34cc06e7bbedb89ee8a39d5[m
+Author: root <mruktamara64@gmail.com>
+Date:   Sat Nov 22 10:12:31 2025 +0100
+
+    more work on homepage frontend
+
+[33mcommit 56a9e32d141869e6ad1607f60b45e094bdb53cc9[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 03:33:11 2025 +0100
+
+    pain.......
+
+[33mcommit f83319661120ead3972dbc04fb752384b4663893[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 03:25:40 2025 +0100
+
+    readme.md please...
+
+[33mcommit 134587afb55b34bf241612ebbe888ffddfd1deac[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 03:21:13 2025 +0100
+
+    TIL: it's written as scraper not scraPPer...
+
+[33mcommit 81bede5b8eedbd9fab8117db77422d466af26d19[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 01:51:13 2025 +0100
+
+    categories and subcategories works, now I will focus on pagination and scrapping products; probably forgot to describe some methods :P
+
+[33mcommit 2fabb1b396bf7a12a3386e047da25db0b9cd4693[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 00:32:23 2025 +0100
+
+    silly mistake: commited from wrong directory :P
+
+[33mcommit 825fae2d40fcef24e3f9ee5ce81626e0abd11137[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Sat Nov 22 00:31:17 2025 +0100
+
+    scrapping a product works; added entry in .gitingore; moving to scrapping a category, then automatization :P
+
+[33mcommit e9c0d96426b19c2e03846b0a656acc589f6d3e7f[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Fri Nov 21 23:45:21 2025 +0100
+
+    scrapping a description works!
+
+[33mcommit a852154b8fb425e8235d790a4add8c8b43ea7ede[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Fri Nov 21 23:26:54 2025 +0100
+
+    initial state, wish me luck
+
+[33mcommit c296a9a8350ecbaedfe056751d98418ec0721c88[m
+Author: root <mruktamara64@gmail.com>
+Date:   Fri Nov 21 19:37:02 2025 +0100
+
+    another sql dump after homepage frontend changes
+
+[33mcommit e24032e8eb0150847f8a895dae21f3d5162ec4e7[m
+Author: root <mruktamara64@gmail.com>
+Date:   Fri Nov 21 19:33:06 2025 +0100
+
+    home page mainly finished frontend-wise
+
+[33mcommit f99f0c119fcf827d6de493698140b21bcaa72e0a[m
+Author: root <mruktamara64@gmail.com>
+Date:   Fri Nov 21 11:24:15 2025 +0100
+
+    prestashop sql dump after visual changes
+
+[33mcommit 6d02463d48b33165a082777ca257e13c89768bb2[m
+Author: root <mruktamara64@gmail.com>
+Date:   Thu Nov 20 18:41:23 2025 +0100
+
+    worked on home page frontend
+
+[33mcommit acf2c8ff0a781f85f7b2fb710879acc755df4b4e[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Thu Nov 20 14:05:18 2025 +0100
+
+    added composer to initialize with sql dump
+
+[33mcommit 31a214c14efe93f7293954bb33d54d0019de2d20[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Thu Nov 20 12:29:59 2025 +0100
+
+    fixed typo in readme
+
+[33mcommit 4fd759a1f7ac7587b68a4279efad5dfafb51fde3[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Thu Nov 20 12:29:36 2025 +0100
+
+    added more description to readme
+
+[33mcommit 9e6ca3242c4b580bff67a9f3260e3fe1246bcdb0[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Thu Nov 20 12:23:51 2025 +0100
+
+    added contributors to readme
+
+[33mcommit f119d7999b1a7989e6718cf42a280190c28697cf[m
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 21:01:07 2025 +0100
+
+    modified page looks, added categories and brands
+
+[33mcommit 3aac513e351c0c79a3710eeaa70ea439eb72791c[m
+Author: stylGotycki <stylgotycki@o2.pl>
+Date:   Wed Nov 19 20:22:08 2025 +0100
+
+    ehhhhhhhhhhh, prestashop...
+
+[33mcommit 37f10ee9deeb4e84b5cf1949439710467a112a88[m
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 19:52:00 2025 +0100
+
+    added parameters.php
+
+[33mcommit 12cf80d5a45bd534c93bab60f139f625eb5b8085[m
+Merge: fe9984c23 30bed8529
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 19:51:11 2025 +0100
+
+    Merge branch 'main' of https://github.com/stylGotycki/BiznesElektroniczny
+
+[33mcommit fe9984c231d339b79934a71ae159c1c3b0cf0d96[m
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 19:49:52 2025 +0100
+
+    updated categories, worked on page look
+
+[33mcommit 30bed8529c4fedf1a9c30aba79f21aebde8add6b[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Wed Nov 19 19:46:16 2025 +0100
+
+    took out parameters.php
+
+[33mcommit c1254afdefcb9e3263573bc2ea6ccc2fe3578269[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Wed Nov 19 10:20:40 2025 +0100
+
+    Update README.md
+
+[33mcommit 2b50a103ae04c040ac2b47f1ecfb01cd6554d115[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Wed Nov 19 10:13:33 2025 +0100
+
+    added useful commands to readme
+
+[33mcommit 5af1d5fbc4639c8520f8e6e17b9f68813c1861c2[m
+Merge: 3cdd9e298 6c28055d2
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 10:08:16 2025 +0100
+
+    Merge branch 'main' of https://github.com/stylGotycki/BiznesElektroniczny
+    merge readme
+
+[33mcommit 3cdd9e2985cf81c576a9af780c149ba136d69906[m
+Author: root <mruktamara64@gmail.com>
+Date:   Wed Nov 19 10:01:56 2025 +0100
+
+    modified compose with :cached
+
+[33mcommit 6c28055d2286f7ede0dc13e1fdf968eec91b2d2e[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 14:10:23 2025 +0100
+
+    readme update
+
+[33mcommit be07ff34a4141ea9c954c8aa30660cc41b339dbe[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 14:09:56 2025 +0100
+
+    readme update
+
+[33mcommit 0507593ab72f11f99ccaf6ebbaefb6f9332d7005[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 14:09:08 2025 +0100
+
+    updated readme
+
+[33mcommit 9419ab8d98847d492e9eeffe0639e18d32cfd789[m
+Author: root <mruktamara64@gmail.com>
+Date:   Tue Nov 11 13:54:26 2025 +0100
+
+    prestashop, sql dump, compose
+
+[33mcommit 4bd8ef4bee0d80eae26c51227106eff4d0660c19[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 13:25:15 2025 +0100
+
+    new gitignore
+
+[33mcommit c9cae7ae6aa53e653662a223269d09f83d4324f9[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 12:45:02 2025 +0100
+
+    starting again
+
+[33mcommit 0963a6ceebc5e6bd3a0b89febb77fecbe5ff7661[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 12:44:49 2025 +0100
+
+    starting again
+
+[33mcommit b7eee5f66d32d0f6d6a345bc086a51fda219986d[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 12:44:32 2025 +0100
+
+    starting again
+
+[33mcommit e31f748c6657627fd51eeaaddfab759f2cb7e2ef[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 12:44:06 2025 +0100
+
+    starting again
+
+[33mcommit 030b8d1657bbc1fd3fbf3ad6df0c9691ba9195c9[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:37:01 2025 +0100
+
+    fixed db
+
+[33mcommit a71c82163cf94f35d9ac625bd0d7fa1d6b2370b8[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:33:07 2025 +0100
+
+    Update .gitignore
+
+[33mcommit 78a196369aabf18273d0185054b3f0df9fc79c3c[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:20:58 2025 +0100
+
+    Revert "Update .gitignore"
+    
+    This reverts commit ab8f3f03c25c39ea5d7b5e581cec6656e871f3d8.
+    
+    bruhh
+
+[33mcommit 7a88eb9f9a1ae2ba19b088d8f91514a9dffd6299[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:20:34 2025 +0100
+
+    Revert "added some more files"
+    
+    This reverts commit f60171157ba6b17dffc068a6db70add772f69e8c.
+    
+    bruhh
+
+[33mcommit 7d8558a5cdbf9ad1b7d2326365a0fcad04a6e506[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:20:02 2025 +0100
+
+    Revert "Update .gitignore"
+    
+    This reverts commit 4fa9770bd6051321fcaa228e0921e3fccdba9656.
+    
+    bruhhhhh
+
+[33mcommit 4fa9770bd6051321fcaa228e0921e3fccdba9656[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:07:38 2025 +0100
+
+    Update .gitignore
+
+[33mcommit f60171157ba6b17dffc068a6db70add772f69e8c[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 11:03:05 2025 +0100
+
+    added some more files
+
+[33mcommit ab8f3f03c25c39ea5d7b5e581cec6656e871f3d8[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 10:59:44 2025 +0100
+
+    Update .gitignore
+
+[33mcommit c53a40f6a25c9e5b6cecbe0c8e03fe01f3dfa33d[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 07:49:06 2025 +0100
+
+    added folders from prestashop, (var, vendor, etc.)
+
+[33mcommit e48beaca01f6fcf1373711abb4e0ae8fb04b44cf[m
+Merge: 2cd0f83f0 0e1cd2afd
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 07:42:50 2025 +0100
+
+    Merge branch 'main' of https://github.com/stylGotycki/BiznesElektroniczny
+    merged new readme
+
+[33mcommit 2cd0f83f0d62c29b5d7d765a6d7bffcad6649e13[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Tue Nov 11 07:42:10 2025 +0100
+
+    modified gitignore
+
+[33mcommit 0e1cd2afdd35bf8a2a7a7fbf3f8cfbf988817caf[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 18:19:57 2025 +0100
+
+    added useful commands
+
+[33mcommit 746a9d83285b3fe6ed6d48a02aafe92624adf168[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 18:11:31 2025 +0100
+
+    made readme pretty
+
+[33mcommit 6d229742070a1f26148a63362355891da6c57f47[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 18:06:19 2025 +0100
+
+    remove swapped readme
+
+[33mcommit c955a12ab1117def0b77a00d62c22b34b2280830[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 18:04:25 2025 +0100
+
+    swap readme
+
+[33mcommit 0b9fa14e61fbfa3c4d846277faea0a4ace420e11[m
+Author: Tamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 18:03:40 2025 +0100
+
+    update of readme with more instructions
+
+[33mcommit e40027bb90f911e9dc203b3208389072f0464c9f[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 17:48:10 2025 +0100
+
+    added working prestashop and docker stuff
+
+[33mcommit 39393ba33642b7200a9e9faf63056f11a8e8f952[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 17:45:53 2025 +0100
+
+    gitignore again omg
+
+[33mcommit 456b11afb9a8d50747b78ac3c6965e6fb9492509[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 17:32:28 2025 +0100
+
+    gitignore
+
+[33mcommit 105c8765aa469de6635552a0bc7ad76053862cf8[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 17:26:37 2025 +0100
+
+    untrack everything
+
+[33mcommit 4e2155906132fb9cfcc2fe35b8e23bc0c0f45259[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 17:16:25 2025 +0100
+
+    update gitignore again
+
+[33mcommit 19ca67174437e1021f249a6b18222f9344b0ced2[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 14:50:42 2025 +0100
+
+    updated gitignore
+
+[33mcommit 3000612b7253f175e4a3d54845ff7043e2a944c3[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 14:46:55 2025 +0100
+
+    added docker compose, readme, and gitignore
+
+[33mcommit 6034d1411950c063e4d2cb047c87d66da3fd6a03[m
+Author: ciamara <mruktamara64@gmail.com>
+Date:   Fri Nov 7 12:40:25 2025 +0100
+
+    Some basic folder structure, readme

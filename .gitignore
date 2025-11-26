@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /prestashop/admin/autoupgrade/
 /prestashop/cache/
 /prestashop/img/tmp/
@@ -6,5 +7,24 @@
 /prestashop/mails/
 /prestashop/modules/
 /prestashop/themes/
+=======
+prestashop/var/cache/
+prestashop/var/logs/
+
+prestashop/upload/
+prestashop/download/
+
+prestashop/img/tmp/
+
+/db_data/
+
+.env
+.env.local
+.env.*.local
+
+.DS_Store
+Thumbs.db
+
+>>>>>>> main
 *.log
 *.tmp
