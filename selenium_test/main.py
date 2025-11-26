@@ -6,6 +6,17 @@ from selenium.webdriver.common.keys import Keys
 import time
 import random
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+def wait_for_element(by, value, timeout=10):
+    """
+    Waits for an element to be present in the DOM.
+    Returns the WebElement once found or raises TimeoutException after timeout.
+    """
+    return WebDriverWait(driver, timeout).until(EC.presence_of_element_located((by, value)))
+
+
 def go_to_cart():
     cart_button = driver.find_element(By.CSS_SELECTOR, "#_desktop_cart a")
     cart_button.click()
@@ -62,7 +73,8 @@ def add_products_to_cart():
     while categories_no > 0 or products_no > 0:
         products_init_no = products_no
 
-        products_panel = driver.find_element(By.ID, "category-3")
+        # <-- Use wait_for_element here instead of find_element directly
+        products_panel = wait_for_element(By.ID, "category-3")
         ActionChains(driver).move_to_element(products_panel).perform()
 
         wait()
@@ -70,9 +82,9 @@ def add_products_to_cart():
         category_found = False
 
         while not category_found:
-            category = driver.find_elements(By.ID, "category-" + str(category_id))
-            if len(category) > 0:
-                category[0].click()
+            category_elements = driver.find_elements(By.ID, "category-" + str(category_id))
+            if category_elements:
+                category_elements[0].click()
                 category_found = True
             category_id += 1
 
@@ -87,6 +99,8 @@ def add_products_to_cart():
             if products[i].find_elements(By.CSS_SELECTOR, "li.product-flag.out_of_stock"):
                 continue
 
+            # Wait for the clickable thumbnail before clicking
+            thumbnail = wait_for_element(By.CSS_SELECTOR, ".js-product a.product-thumbnail")
             products[i].find_element(By.CSS_SELECTOR, ".js-product a.product-thumbnail").click()
 
             wait()
@@ -94,13 +108,14 @@ def add_products_to_cart():
             add_to_cart(random.randint(1,5))
             products_no -= 1
 
-            if not ( ( categories_no >= 2 and products_no > 3 ) or ( categories_no == 1 and products_no > 0) ):
+            if not ((categories_no >= 2 and products_no > 3) or (categories_no == 1 and products_no > 0)):
                 break
 
         if products_init_no > products_no:
             categories_no -= 1
 
         wait()
+
 
 
 # add random product to cart
@@ -299,7 +314,7 @@ driver = webdriver.Chrome()
 
 print("Test started")
 
-driver.get("http://localhost:8080/")
+driver.get("https://localhost:8080")
 driver.maximize_window()
 
 add_products_to_cart()
